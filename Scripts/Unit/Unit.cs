@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private UnitAnimated _animated;
+    [SerializeField] private Animator _animated;
 
     private float _speed = 5f;
     private Transform _transform;
@@ -44,7 +44,6 @@ public class Unit : MonoBehaviour
     {
         _animated.SetRunning(false);
         _animated.SetPickUp(true);
-        IsBusy = false;
 
         if (_targetPosition != _spawnPosition)
         {
@@ -56,5 +55,6 @@ public class Unit : MonoBehaviour
     {
         yield return _waitForSeconds;
         MoveToTarget(_spawnPosition);
+        IsBusy = false;
     }
 }
