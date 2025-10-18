@@ -1,11 +1,14 @@
+using System;
 using UnityEngine;
 
 public class BaseScanner : MonoBehaviour
 {
     [SerializeField] private float _scanRadius;
-    [SerializeField] private ResourceStorage _storage;
-    [SerializeField] private SpawnerUnit _unitSpawner;
+
     [SerializeField] private ButtonEvent _scanButton;
+
+    public event Action<Resource> OnResourceFound;
+    public event Action OnScanCompleted;
 
     private void OnEnable()
     {
@@ -17,7 +20,7 @@ public class BaseScanner : MonoBehaviour
         _scanButton.Clicked -= ScanArea;
     }
 
-    public void ScanArea()
+    private void Start()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
 
@@ -25,25 +28,13 @@ public class BaseScanner : MonoBehaviour
         {
             if (hit.TryGetComponent<Resource>(out Resource resource))
             {
-                _storage.AddResource(resource);
+                OnResourceFound?.Invoke(resource);
             }
         }
-
-        AssignUnitToResource(_storage.ContainsResource());
     }
 
-    private void AssignUnitToResource(Resource targetResource)
+    public void ScanArea()
     {
-        if (targetResource != null)
-        {
-            foreach (var unit in _unitSpawner.ActiveObjects)
-            {
-                if (unit.IsBusy==false)
-                {
-                    unit.MoveToTarget(targetResource.transform.position);
-                    break;
-                }
-            }
-        }
+        OnScanCompleted?.Invoke();
     }
 }

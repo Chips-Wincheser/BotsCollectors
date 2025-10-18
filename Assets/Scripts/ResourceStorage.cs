@@ -14,7 +14,7 @@ public class ResourceStorage : MonoBehaviour
         }
     }
 
-    public Resource ContainsResource()
+    public Resource TakeOneResource()
     {
         if (_freeResources.Count > 0)
         {

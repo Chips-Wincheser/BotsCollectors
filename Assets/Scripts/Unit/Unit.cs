@@ -20,7 +20,7 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         _transform = transform;
-        _spawnPosition= transform.position;
+        _spawnPosition= _transform.position;
         IsBusy = false;
         _waitForSeconds = new WaitForSeconds(delay);
     }

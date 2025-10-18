@@ -8,12 +8,13 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
     [SerializeField] protected int PoolCapacity = 5;
     [SerializeField] protected int PoolMaxSize = 5;
 
+    private ObjectPool<T> _pool;
+
     public List<T> ActiveObjects { get; private set; }
-    public ObjectPool<T> Pool { get; private set; }
 
     protected virtual void Awake()
     {
-        Pool= new ObjectPool<T>(
+        _pool= new ObjectPool<T>(
             createFunc: () => Instantiate(_prefab),
             actionOnGet: (obj) => Create(obj),
             actionOnRelease: (obj) => TurningOff(obj),
@@ -28,9 +29,9 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
 
     private void Start()
     {
-        while (Pool.CountActive<PoolMaxSize)
+        while (_pool.CountActive<PoolMaxSize)
         {
-            Pool.Get();
+            _pool.Get();
         }
     }
 
@@ -44,6 +45,6 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
 
     public void PutInPool(T obj)
     {
-        Pool.Release(obj);
+        _pool.Release(obj);
     }
 }
