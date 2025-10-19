@@ -9,13 +9,13 @@ public class Base : MonoBehaviour
     private void OnEnable()
     {
         _baseScanner.OnResourceFound+=HandleResourceFound;
-        _baseScanner.OnScanCompleted+=AssignUnitToResource;
+        _baseScanner.TargetsAssignmentRequested+=AssignUnitToResource;
     }
 
     private void OnDisable()
     {
         _baseScanner.OnResourceFound-=HandleResourceFound;
-        _baseScanner.OnScanCompleted-=AssignUnitToResource;
+        _baseScanner.TargetsAssignmentRequested-=AssignUnitToResource;
     }
 
     private void HandleResourceFound(Resource resource)
@@ -25,12 +25,14 @@ public class Base : MonoBehaviour
 
     private void AssignUnitToResource()
     {
-        Resource targetResource=_storage.TakeOneResource();
+        Resource targetResource=_storage.TakeResource();
 
         if (targetResource != null)
         {
-            foreach (var unit in _unitSpawner.ActiveObjects)
+            for (int i=0; i < _unitSpawner.GetActiveObject() ; i++)
             {
+                Unit unit = _unitSpawner.GetObjectByIndex(i);
+
                 if (unit.IsBusy==false)
                 {
                     unit.MoveToTarget(targetResource.transform.position);

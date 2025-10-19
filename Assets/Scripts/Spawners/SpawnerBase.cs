@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -10,7 +11,7 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
 
     private ObjectPool<T> _pool;
 
-    public List<T> ActiveObjects { get; private set; }
+    protected List<T> ActiveObjects;
 
     protected virtual void Awake()
     {
@@ -27,11 +28,11 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
         ActiveObjects = new List<T>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         while (_pool.CountActive<PoolMaxSize)
         {
-            _pool.Get();
+            SpawnFromPool();
         }
     }
 
@@ -43,8 +44,23 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
         ActiveObjects.Remove(obj);
     }
 
+    protected void SpawnFromPool()
+    {
+        _pool.Get();
+    }
+
     public void PutInPool(T obj)
     {
         _pool.Release(obj);
+    }
+
+    public int GetActiveObject()
+    {
+        return ActiveObjects.Count;
+    }
+
+    public T GetObjectByIndex(int index)
+    {
+        return ActiveObjects.ElementAt(index);
     }
 }

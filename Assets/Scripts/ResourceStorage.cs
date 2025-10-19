@@ -14,7 +14,7 @@ public class ResourceStorage : MonoBehaviour
         }
     }
 
-    public Resource TakeOneResource()
+    public Resource TakeResource()
     {
         if (_freeResources.Count > 0)
         {
@@ -25,5 +25,11 @@ public class ResourceStorage : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void DeleteResource(Resource resource)
+    {
+        _freeResources.Remove(resource);
+        _takenResources.Remove(resource);
     }
 }

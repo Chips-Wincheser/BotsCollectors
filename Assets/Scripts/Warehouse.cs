@@ -8,7 +8,7 @@ public class Warehouse : MonoBehaviour
 
     private List<Resource> _resources;
 
-    public event Action ResourceLoaded;
+    public event Action<int> ResourceLoaded;
 
     private void Awake()
     {
@@ -19,6 +19,6 @@ public class Warehouse : MonoBehaviour
     {
         _resources.Add(resource);
         _spawnerResources.PutInPool(resource);
-        ResourceLoaded?.Invoke();
+        ResourceLoaded?.Invoke(_resources.Count);
     }
 }
