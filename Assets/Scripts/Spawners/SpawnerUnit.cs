@@ -13,4 +13,15 @@ public class SpawnerUnit : SpawnerBase<Unit>
         obj.gameObject.SetActive(true);
         ActiveObjects.Add(obj);
     }
+
+    public void SpawnNewUnit()
+    {
+        if(GetActiveObject() < PoolMaxSize)
+            Spawn();
+    }
+
+    public void AddExistingUnit(Unit unit)
+    {
+        ActiveObjects.Add(unit);
+    }
 }

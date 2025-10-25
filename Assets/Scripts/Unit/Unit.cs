@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour
 
     private WaitForSeconds _waitForSeconds;
     private int delay=5;
+    private bool _doNeedBack;
 
     public bool IsBusy {  get; private set; }
 
@@ -25,8 +26,9 @@ public class Unit : MonoBehaviour
         _waitForSeconds = new WaitForSeconds(delay);
     }
 
-    public void MoveToTarget(Vector3 target)
+    public void MoveToTarget(Vector3 target,bool doNeedBack)
     {
+        _doNeedBack= doNeedBack;
         _targetPosition = target;
         IsBusy = true;
 
@@ -37,24 +39,42 @@ public class Unit : MonoBehaviour
         _animated.SetRunning(true);
 
         _transform.DOLookAt(_targetPosition, 0.3f);
-        _moveTween = _transform.DOMove(_targetPosition, _speed).OnComplete(OnArrived);
+
+        _moveTween = _transform.DOMove(_targetPosition, _speed).OnComplete(OnArrived);    
     }
 
     private void OnArrived()
     {
         _animated.SetRunning(false);
-        _animated.SetPickUp(true);
-
-        if (_targetPosition != _spawnPosition)
+        
+        if (_doNeedBack)
         {
-            StartCoroutine(ReturnToBaseDelay());
+            _animated.SetPickUp(true);
+
+            if (_targetPosition != _spawnPosition)
+            {
+                StartCoroutine(ReturnToBaseDelay());
+            }
         }
+
+        IsBusy = false;
     }
 
     private IEnumerator ReturnToBaseDelay()
     {
         yield return _waitForSeconds;
-        MoveToTarget(_spawnPosition);
-        IsBusy = false;
+        MoveToTarget(_spawnPosition,true);
+        yield return _waitForSeconds;
+        
+    }
+
+    public void AssignToNewBase(Vector3 target)
+    {
+        MoveToTarget(target,false);
+    }
+
+    public void SetNewHome(Vector3 newBasePosition)
+    {
+        _spawnPosition = newBasePosition;
     }
 }

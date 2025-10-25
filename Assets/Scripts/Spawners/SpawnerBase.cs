@@ -18,7 +18,7 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
         _pool= new ObjectPool<T>(
             createFunc: () => Instantiate(_prefab),
             actionOnGet: (obj) => Create(obj),
-            actionOnRelease: (obj) => TurningOff(obj),
+            actionOnRelease: (obj) => TurnOff(obj),
             actionOnDestroy: (obj) => Destroy(obj.gameObject),
             collectionCheck: true,
             defaultCapacity: PoolCapacity,
@@ -30,21 +30,21 @@ abstract public class SpawnerBase<T> : MonoBehaviour where T : Component
 
     protected virtual void Start()
     {
-        while (_pool.CountActive<PoolMaxSize)
+        while (_pool.CountActive<PoolCapacity)
         {
-            SpawnFromPool();
+            Spawn();
         }
     }
 
     protected abstract void Create(T obj);
 
-    protected void TurningOff(T obj)
+    protected void TurnOff(T obj)
     {
         obj.gameObject.SetActive(false);
         ActiveObjects.Remove(obj);
     }
 
-    protected void SpawnFromPool()
+    protected void Spawn()
     {
         _pool.Get();
     }

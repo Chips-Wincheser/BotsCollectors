@@ -26,7 +26,7 @@ public class SpawnerResources : SpawnerBase<Resource>
         while (true)
         {
             if (ActiveObjects.Count < PoolMaxSize)
-                SpawnFromPool();
+                Spawn();
 
             yield return _WaitForSeconds;
         }
