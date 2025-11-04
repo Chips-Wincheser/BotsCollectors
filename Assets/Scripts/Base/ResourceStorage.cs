@@ -16,7 +16,6 @@ public class ResourceStorage : MonoBehaviour
 
     public Resource TakeResource()
     {
-        Debug.Log(_freeResources.Count);
         if (_freeResources.Count > 0)
         {
             Resource resource = _freeResources[0];

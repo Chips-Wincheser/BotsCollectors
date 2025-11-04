@@ -14,14 +14,32 @@ public class SpawnerUnit : SpawnerBase<Unit>
         ActiveObjects.Add(obj);
     }
 
-    public void SpawnNewUnit()
+    public bool TrySpawnNewUnit()
     {
         if(GetActiveObject() < PoolMaxSize)
+        {
             Spawn();
+            return true;
+        }
+
+        return false;
     }
 
     public void AddExistingUnit(Unit unit)
     {
         ActiveObjects.Add(unit);
+    }
+
+    public Unit GetFreeObject()
+    {
+        foreach (var item in ActiveObjects)
+        {
+            if (item.IsBusy==false)
+            {
+                return item;
+            }
+        }
+
+        return null;
     }
 }

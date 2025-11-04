@@ -40,7 +40,7 @@ public class Unit : MonoBehaviour
 
         _transform.DOLookAt(_targetPosition, 0.3f);
 
-        _moveTween = _transform.DOMove(_targetPosition, _speed).OnComplete(OnArrived);    
+        _moveTween = _transform.DOMove(_targetPosition, _speed).OnComplete(OnArrived);       
     }
 
     private void OnArrived()
@@ -56,8 +56,10 @@ public class Unit : MonoBehaviour
                 StartCoroutine(ReturnToBaseDelay());
             }
         }
-
-        IsBusy = false;
+        else
+        {
+            IsBusy = false;
+        }
     }
 
     private IEnumerator ReturnToBaseDelay()
@@ -65,7 +67,7 @@ public class Unit : MonoBehaviour
         yield return _waitForSeconds;
         MoveToTarget(_spawnPosition,true);
         yield return _waitForSeconds;
-        
+        IsBusy = false;
     }
 
     public void AssignToNewBase(Vector3 target)

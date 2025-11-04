@@ -15,7 +15,7 @@ public class Base : MonoBehaviour
 
     private void OnEnable()
     {
-        Time.timeScale=3f;
+        //Time.timeScale=3f;
         _baseScanner.OnResourceFound+=HandleResourceFound;
         _baseScanner.TargetsAssignmentRequested+=AssignUnitToResource;
         _warehouse.ResourceLoaded+=SpawnUnit;
@@ -38,9 +38,11 @@ public class Base : MonoBehaviour
         
             if (_broughtResources >= _countResourcesToCreateUnit)
             {
-                _unitSpawner.SpawnNewUnit();
-                _warehouse.ConsumeResources(_countResourcesToCreateUnit);
-                _broughtResources=0;
+                if (_unitSpawner.TrySpawnNewUnit())
+                {
+                    _warehouse.ConsumeResources(_countResourcesToCreateUnit);
+                    _broughtResources=0;
+                }
             }
         }
     }
@@ -57,7 +59,7 @@ public class Base : MonoBehaviour
 
     private void AssignUnitToResource()
     {
-        for (int i = 0; i < _unitSpawner.GetActiveObject(); i++)
+        /*for (int i = 0; i < _unitSpawner.GetActiveObject(); i++)
         {
             Unit unit = _unitSpawner.GetObjectByIndex(i);
 
@@ -70,6 +72,16 @@ public class Base : MonoBehaviour
 
                 unit.MoveToTarget(targetResource.transform.position,true);
             }
+        }*/
+
+        Unit unit = _unitSpawner.GetFreeObject();
+
+        if(unit != null)
+        {
+            Resource targetResource = _storage.TakeResource();
+
+            if (targetResource != null)
+                unit.MoveToTarget(targetResource.transform.position, true);
         }
     }
 

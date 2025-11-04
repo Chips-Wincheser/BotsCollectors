@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class BaseScanner : MonoBehaviour
@@ -24,14 +25,32 @@ public class BaseScanner : MonoBehaviour
     {
         while (true)
         {
-            for (int i = 0; i < _spawnerResources.GetActiveObject(); i++)
+
+            /*for (int i = 0; i < _spawnerResources.GetActiveObject(); i++)
             {
                 Resource resource = _spawnerResources.GetObjectByIndex(i);
                 OnResourceFound?.Invoke(resource);
                 TargetsAssignmentRequested?.Invoke();
+            }*/
+
+            Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
+
+            bool anyResourceFound = false;
+
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent<Resource>(out Resource resource))
+                {
+                    OnResourceFound?.Invoke(resource);
+                    anyResourceFound = true;
+                }
             }
+
+            if (anyResourceFound)
+                TargetsAssignmentRequested?.Invoke();
 
             yield return _WaitForSeconds;
         }
     }
 }
+
