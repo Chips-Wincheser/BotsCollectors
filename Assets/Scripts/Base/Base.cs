@@ -2,20 +2,18 @@ using UnityEngine;
 
 public class Base : MonoBehaviour
 {
-    [SerializeField] private SpawnerUnit _unitSpawner;
+    [SerializeField] private UnitHub _unitHub;
     [SerializeField] private BaseScanner _baseScanner;
     [SerializeField] private ResourceStorage _storage;
     [SerializeField] private Warehouse _warehouse;
     [SerializeField] private FlagSetter _flagSetter;
 
     private int _countResourcesToCreateUnit = 3;
-    private int _broughtResources;
 
     private bool _isSpawnUnit=true;
 
     private void OnEnable()
     {
-        //Time.timeScale=3f;
         _baseScanner.OnResourceFound+=HandleResourceFound;
         _baseScanner.TargetsAssignmentRequested+=AssignUnitToResource;
         _warehouse.ResourceLoaded+=SpawnUnit;
@@ -36,11 +34,9 @@ public class Base : MonoBehaviour
         {
             if (count >= _countResourcesToCreateUnit)
             {
-                if (_unitSpawner.TrySpawnNewUnit())
-                {
-                    _warehouse.ConsumeResources(_countResourcesToCreateUnit);
-                    _warehouse.RemoveRange(_countResourcesToCreateUnit);
-                }
+                _unitHub.CreateNewUnit(transform.position);
+                _warehouse.ConsumeResources(_countResourcesToCreateUnit);
+                _warehouse.RemoveRange(_countResourcesToCreateUnit);
             }
         }
     }
@@ -57,22 +53,7 @@ public class Base : MonoBehaviour
 
     private void AssignUnitToResource()
     {
-        /*for (int i = 0; i < _unitSpawner.GetActiveObject(); i++)
-        {
-            Unit unit = _unitSpawner.GetObjectByIndex(i);
-
-            if (unit.IsBusy == false)
-            {
-                Resource targetResource = _storage.TakeResource();
-
-                if (targetResource == null)
-                    break;
-
-                unit.MoveToTarget(targetResource.transform.position,true);
-            }
-        }*/
-
-        Unit unit = _unitSpawner.GetFreeObject();
+        Unit unit = _unitHub.GetFreeObject();
 
         if(unit != null)
         {
@@ -81,12 +62,5 @@ public class Base : MonoBehaviour
             if (targetResource != null)
                 unit.MoveToTarget(targetResource.transform.position, true);
         }
-    }
-
-    public void AddExistingUnit(Unit unit)
-    {
-        unit.SetNewHome(transform.position);
-        _unitSpawner.AddExistingUnit(unit);
-        _isSpawnUnit= true;
     }
 }

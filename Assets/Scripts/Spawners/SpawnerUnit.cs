@@ -1,45 +1,13 @@
 using UnityEngine;
 
-public class SpawnerUnit : SpawnerBase<Unit>
+public class SpawnerUnit : MonoBehaviour
 {
-    private Vector3 _offset=Vector3.zero;
+    [SerializeField] private Unit _prefab;
 
-    private int _step=5;
-
-    protected override void Create(Unit obj)
+    public Unit Create(Vector3 Position)
     {
-        _offset+=new Vector3(_step,0,0);
-        obj.transform.position = transform.position+_offset;
-        obj.gameObject.SetActive(true);
-        ActiveObjects.Add(obj);
-    }
-
-    public bool TrySpawnNewUnit()
-    {
-        if(GetActiveObject() < PoolMaxSize)
-        {
-            Spawn();
-            return true;
-        }
-
-        return false;
-    }
-
-    public void AddExistingUnit(Unit unit)
-    {
-        ActiveObjects.Add(unit);
-    }
-
-    public Unit GetFreeObject()
-    {
-        foreach (var item in ActiveObjects)
-        {
-            if (item.IsBusy==false)
-            {
-                return item;
-            }
-        }
-
-        return null;
+        Unit unit = Instantiate(_prefab, Position, Quaternion.identity);
+        
+        return unit;
     }
 }

@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class BaseBuilding : MonoBehaviour
 {
-    [SerializeField] private Base PrefabBase;
+    [SerializeField] private UnitHub PrefabBase;
 
     [SerializeField] private SpawnerUnit _unitSpawner;
+    [SerializeField] private UnitHub _unitHub;
     [SerializeField] private Warehouse _warehouse;
     [SerializeField] private FlagSetter _flagSetter;
 
@@ -40,7 +41,7 @@ public class BaseBuilding : MonoBehaviour
         {
             _warehouse.ConsumeResources(_countResourcesToCreateBase);
 
-            Unit unit = _unitSpawner.GetFreeObject();
+            Unit unit = _unitHub.GetFreeObject();
 
             if(unit != null)
             {
@@ -58,14 +59,18 @@ public class BaseBuilding : MonoBehaviour
 
     private void CreateNewBase(Unit builder)
     {
-        Vector3 flagPosition = _flag.transform.position;
-        Base newBase = Instantiate(PrefabBase, flagPosition, Quaternion.identity);
-        newBase.AddExistingUnit(builder);
+        if (_unitHub.UnitCount>1 && _unitSpawner!=null && _flag!=null)
+        {
+            Vector3 flagPosition = _flag.transform.position;
+            UnitHub newBase = Instantiate(PrefabBase, flagPosition, Quaternion.identity);
+            newBase.AddExistingUnit(builder);
+            newBase.SetSpawner(_unitSpawner);
 
-        _isFlagUp = false;
+            _isFlagUp = false;
 
-        Destroy(_flag.gameObject);
-        _flag = null;
+            Destroy(_flag.gameObject);
+            _flag = null;
+        }
     }
 
     private IEnumerator WaitToUnitArrive(Unit unit)

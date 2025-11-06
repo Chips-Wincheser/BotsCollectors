@@ -36,12 +36,10 @@ public class FlagSetter : MonoBehaviour
                     if (_currentFlag != null)
                     {
                         _currentFlag.transform.position = hit.point;
-                        Debug.Log("Флаг перемещён.");
                     }
                     else
                     {
                         _currentFlag = Instantiate(_flagPrefab, hit.point, Quaternion.identity);
-                        Debug.Log("Флаг установлен.");
                     }
 
                     _isPlacingFlag = false;

@@ -22,17 +22,12 @@ public class Warehouse : MonoBehaviour
 
     public void ReceiveItem(Resource resource)
     {
-        if (resource == null)
+        if (resource != null)
         {
-            Debug.Log("Нет ресурса");
+            _resources.Add(resource);
+            _spawnerResources.PutInPool(resource);
+            ResourceLoaded?.Invoke(_resources.Count);
         }
-        if(_spawnerResources == null)
-        {
-            Debug.Log("Net Spawnera");
-        }
-        _resources.Add(resource);
-        _spawnerResources.PutInPool(resource);
-        ResourceLoaded?.Invoke(_resources.Count);
     }
 
     public void ConsumeResources(int amount)

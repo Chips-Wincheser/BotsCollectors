@@ -24,14 +24,6 @@ public class BaseScanner : MonoBehaviour
     {
         while (true)
         {
-
-            /*for (int i = 0; i < _spawnerResources.GetActiveObject(); i++)
-            {
-                Resource resource = _spawnerResources.GetObjectByIndex(i);
-                OnResourceFound?.Invoke(resource);
-                TargetsAssignmentRequested?.Invoke();
-            }*/
-
             Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
 
             bool anyResourceFound = false;
