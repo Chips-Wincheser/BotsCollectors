@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class BaseScanner : MonoBehaviour
@@ -8,7 +7,7 @@ public class BaseScanner : MonoBehaviour
     [SerializeField] private SpawnerResources _spawnerResources;
 
     [SerializeField] private float _scanRadius;
-    [SerializeField] private float _scanTime=5f;
+    [SerializeField] private float _scanTime=2f;
 
     private WaitForSeconds _WaitForSeconds;
 

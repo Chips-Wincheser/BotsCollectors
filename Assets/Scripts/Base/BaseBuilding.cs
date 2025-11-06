@@ -10,13 +10,12 @@ public class BaseBuilding : MonoBehaviour
     [SerializeField] private FlagSetter _flagSetter;
 
     private int _countResourcesToCreateBase = 5;
-    private int _broughtResources=0;
 
     private bool _isFlagUp;
     private Flag _flag;
 
     private WaitForSeconds _waitForSeconds;
-    private int delay = 5;
+    private int delay = 6;
 
     private void OnEnable()
     {
@@ -37,22 +36,16 @@ public class BaseBuilding : MonoBehaviour
 
     private void GatheringResources(int count)
     {
-        _broughtResources++;
-
-        if (_broughtResources>=_countResourcesToCreateBase && _isFlagUp==true)
+        if (count>=_countResourcesToCreateBase && _isFlagUp==true)
         {
             _warehouse.ConsumeResources(_countResourcesToCreateBase);
 
-            for (int i = 0; i < _unitSpawner.GetActiveObject(); i++)
-            {
-                Unit unit = _unitSpawner.GetObjectByIndex(i);
+            Unit unit = _unitSpawner.GetFreeObject();
 
-                if (unit.IsBusy == false)
-                {
-                    unit.AssignToNewBase(_flag.transform.position);
-                    StartCoroutine(WaitToUnitArrive(unit));
-                    break;
-                }
+            if(unit != null)
+            {
+                unit.AssignToNewBase(_flag.transform.position);
+                StartCoroutine(WaitToUnitArrive(unit));
             }
         }
     }
@@ -65,10 +58,14 @@ public class BaseBuilding : MonoBehaviour
 
     private void CreateNewBase(Unit builder)
     {
-        Base newBase = Instantiate(PrefabBase, _flag.transform.position, Quaternion.identity);
+        Vector3 flagPosition = _flag.transform.position;
+        Base newBase = Instantiate(PrefabBase, flagPosition, Quaternion.identity);
         newBase.AddExistingUnit(builder);
-        _isFlagUp= false;
+
+        _isFlagUp = false;
+
         Destroy(_flag.gameObject);
+        _flag = null;
     }
 
     private IEnumerator WaitToUnitArrive(Unit unit)

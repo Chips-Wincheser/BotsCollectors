@@ -22,6 +22,14 @@ public class Warehouse : MonoBehaviour
 
     public void ReceiveItem(Resource resource)
     {
+        if (resource == null)
+        {
+            Debug.Log("Нет ресурса");
+        }
+        if(_spawnerResources == null)
+        {
+            Debug.Log("Net Spawnera");
+        }
         _resources.Add(resource);
         _spawnerResources.PutInPool(resource);
         ResourceLoaded?.Invoke(_resources.Count);
@@ -31,5 +39,10 @@ public class Warehouse : MonoBehaviour
     {
         if (_resources.Count > amount)
             _resources.RemoveRange(0, amount);
+    }
+
+    public void RemoveRange(int count)
+    {
+        _resources.RemoveRange(0,count);
     }
 }

@@ -34,14 +34,12 @@ public class Base : MonoBehaviour
     {
         if(_isSpawnUnit == true)
         {
-            _broughtResources++;
-        
-            if (_broughtResources >= _countResourcesToCreateUnit)
+            if (count >= _countResourcesToCreateUnit)
             {
                 if (_unitSpawner.TrySpawnNewUnit())
                 {
                     _warehouse.ConsumeResources(_countResourcesToCreateUnit);
-                    _broughtResources=0;
+                    _warehouse.RemoveRange(_countResourcesToCreateUnit);
                 }
             }
         }

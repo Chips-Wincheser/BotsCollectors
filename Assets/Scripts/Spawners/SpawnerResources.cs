@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class SpawnerResources : SpawnerBase<Resource>
 {
-    private float _spawnInterval=6;
+    private float _spawnInterval=3;
     private BoxCollider _platformCollider;
     private WaitForSeconds _WaitForSeconds;
 

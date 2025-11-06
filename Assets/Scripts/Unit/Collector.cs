@@ -33,7 +33,7 @@ public class Collector : MonoBehaviour
 
     private void HandleResourceDetected(Resource apple)
     {
-        if (_resource == null)
+        if (_resource == null && apple.transform.parent == null)
         {
             apple.transform.SetParent(_hand);
             apple.transform.localPosition = Vector3.zero;
