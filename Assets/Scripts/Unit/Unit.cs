@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private Animator _animated;
+    [SerializeField] private CharacterAnimator _animated;
 
     private float _speed = 5f;
     private Transform _transform;

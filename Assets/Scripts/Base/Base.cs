@@ -14,18 +14,18 @@ public class Base : MonoBehaviour
 
     private void OnEnable()
     {
-        _baseScanner.OnResourceFound+=HandleResourceFound;
+        _baseScanner.ResourceFounded+=HandleResourceFound;
         _baseScanner.TargetsAssignmentRequested+=AssignUnitToResource;
         _warehouse.ResourceLoaded+=SpawnUnit;
-        _flagSetter.FlagSeted+=ToggleFlag;
+        _flagSetter.UnitSpawnToggled+=ToggleFlag;
     }
 
     private void OnDisable()
     {
-        _baseScanner.OnResourceFound-=HandleResourceFound;
+        _baseScanner.ResourceFounded-=HandleResourceFound;
         _baseScanner.TargetsAssignmentRequested-=AssignUnitToResource;
         _warehouse.ResourceLoaded-=SpawnUnit;
-        _flagSetter.FlagSeted-=ToggleFlag;
+        _flagSetter.UnitSpawnToggled-=ToggleFlag;
     }
 
     private void SpawnUnit(int count)
@@ -41,7 +41,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void ToggleFlag(bool isSpawnUnit,Flag flag)
+    private void ToggleFlag(bool isSpawnUnit)
     {
         _isSpawnUnit= isSpawnUnit;
     }

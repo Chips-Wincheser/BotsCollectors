@@ -4,17 +4,22 @@ using UnityEngine;
 public class FlagSetter : MonoBehaviour
 {
     [SerializeField] private Flag _flagPrefab;
+    [SerializeField] private PlayerInput _playerInput;
 
-    private Camera _mainCamera;
     private Flag _currentFlag;
     private bool _isPlacingFlag = false;
-    private string _compareTag = "Ground";
 
-    public event Action<bool,Flag> FlagSeted;
+    public event Action<bool,Flag> FlagPlaced;
+    public event Action<bool> UnitSpawnToggled;
 
-    private void Start()
+    private void OnEnable()
     {
-        _mainCamera = Camera.main;
+        _playerInput.GroundClicked += HandleGroundClick;
+    }
+
+    private void OnDisable()
+    {
+        _playerInput.GroundClicked -= HandleGroundClick;
     }
 
     private void OnMouseDown()
@@ -22,30 +27,20 @@ public class FlagSetter : MonoBehaviour
         _isPlacingFlag = true;
     }
 
-    private void Update()
+    private void HandleGroundClick(Vector3 position)
     {
-        if (_isPlacingFlag && Input.GetMouseButtonDown(0))
+        if (_currentFlag != null)
         {
-            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.CompareTag(_compareTag))
-                {
-                    if (_currentFlag != null)
-                    {
-                        _currentFlag.transform.position = hit.point;
-                    }
-                    else
-                    {
-                        _currentFlag = Instantiate(_flagPrefab, hit.point, Quaternion.identity);
-                    }
-
-                    _isPlacingFlag = false;
-                    FlagSeted?.Invoke(_isPlacingFlag, _currentFlag);
-                }
-            }
+            _currentFlag.transform.position = position;
         }
+        else
+        {
+            _currentFlag = Instantiate(_flagPrefab, position, Quaternion.identity);
+        }
+
+        _isPlacingFlag = false;
+
+        FlagPlaced?.Invoke(_isPlacingFlag, _currentFlag);
+        UnitSpawnToggled?.Invoke(_isPlacingFlag);
     }
 }

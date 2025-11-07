@@ -13,7 +13,8 @@ public class SpawnerResources: MonoBehaviour
 
     private ObjectPool<Resource> _pool;
 
-    private float _spawnInterval = 3;
+    private float _spawnInterval = 3f;
+    private float _halfSizeFactor = 2f;
     private BoxCollider _platformCollider;
     private WaitForSeconds _WaitForSeconds;
 
@@ -46,8 +47,8 @@ public class SpawnerResources: MonoBehaviour
         Vector3 platformSize = _platformCollider.size;
         Vector3 platformCenter = _platformCollider.center;
 
-        float randomX = UnityEngine.Random.Range(-platformSize.x / 2f, platformSize.x / 2f);
-        float randomZ = UnityEngine.Random.Range(-platformSize.z / 2f, platformSize.z / 2f);
+        float randomX = Random.Range(-platformSize.x / _halfSizeFactor, platformSize.x / _halfSizeFactor);
+        float randomZ = Random.Range(-platformSize.z / _halfSizeFactor, platformSize.z / _halfSizeFactor);
         float positionY = 0f;
 
         Vector3 localOffset = new Vector3(randomX, positionY, randomZ) + platformCenter;
@@ -77,7 +78,7 @@ public class SpawnerResources: MonoBehaviour
 
     private IEnumerator Spawner()
     {
-        while (true)
+        while (enabled)
         {
             if (_activeObjects.Count < _poolMaxSize)
                 Spawn();

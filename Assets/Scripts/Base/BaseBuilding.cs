@@ -21,13 +21,13 @@ public class BaseBuilding : MonoBehaviour
     private void OnEnable()
     {
         _warehouse.ResourceLoaded+=GatheringResources;
-        _flagSetter.FlagSeted+=ToggleFlag;
+        _flagSetter.FlagPlaced+=ToggleFlag;
     }
 
     private void OnDisable()
     {
         _warehouse.ResourceLoaded-=GatheringResources;
-        _flagSetter.FlagSeted-=ToggleFlag;
+        _flagSetter.FlagPlaced-=ToggleFlag;
     }
 
     private void Awake()

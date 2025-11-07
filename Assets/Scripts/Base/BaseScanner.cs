@@ -11,7 +11,7 @@ public class BaseScanner : MonoBehaviour
 
     private WaitForSeconds _WaitForSeconds;
 
-    public event Action<Resource> OnResourceFound;
+    public event Action<Resource> ResourceFounded;
     public event Action TargetsAssignmentRequested;
 
     private void Start()
@@ -22,7 +22,7 @@ public class BaseScanner : MonoBehaviour
 
     private IEnumerator ScanArea()
     {
-        while (true)
+        while (enabled)
         {
             Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
 
@@ -32,7 +32,7 @@ public class BaseScanner : MonoBehaviour
             {
                 if (hit.TryGetComponent<Resource>(out Resource resource))
                 {
-                    OnResourceFound?.Invoke(resource);
+                    ResourceFounded?.Invoke(resource);
                     anyResourceFound = true;
                 }
             }
